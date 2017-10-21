@@ -24,42 +24,49 @@ PROMPT ======================================================================
 PROMPT This script installs Oracle database objects for emptracker.
 PROMPT
 PROMPT Connect to the target user (schema) of your choice.
-PROMPT See utils/user/emptracker.sql for required privileges.
+PROMPT See user/emptracker.sql for required privileges.
 PROMPT ======================================================================
 PROMPT
 
 PROMPT ======================================================================
 PROMPT create request and response queue tables
 PROMPT ======================================================================
-PROMPT 
+PROMPT
 @./emptracker/queue_table/requests_qt.sql
 @./emptracker/queue_table/responses_qt.sql
 
 PROMPT ======================================================================
 PROMPT create request and response queues and enable enqueue/dequeue ops
 PROMPT ======================================================================
-PROMPT 
+PROMPT
 @./emptracker/queue/requests_aq.sql
 @./emptracker/queue/responses_aq.sql
 
 PROMPT ======================================================================
-PROMPT create monitoring views 
+PROMPT create PL/SQL callback procedure
 PROMPT ======================================================================
-PROMPT 
-@./emptracker/view/monitor_requests_v.sql
-@./emptracker/view/monitor_responses_v.sql
+PROMPT
+@./emptracker/procedure/raw_enq_callback.sql
 
 PROMPT ======================================================================
-PROMPT create demo tables 
+PROMPT create monitoring views
 PROMPT ======================================================================
-PROMPT 
+PROMPT
+@./emptracker/view/monitor_requests_v.sql
+@./emptracker/view/monitor_responses_v.sql
+@./emptracker/view/monitor_req_res_v.sql
+
+PROMPT ======================================================================
+PROMPT create demo tables
+PROMPT ======================================================================
+PROMPT
 @./emptracker/table/dept.sql
 @./emptracker/table/emp.sql
 
 PROMPT ======================================================================
-PROMPT create trigger to enqueue sal changes 
+PROMPT create trigger to enqueue sal changes
 PROMPT ======================================================================
-PROMPT 
+PROMPT
 @./emptracker/trigger/emp_au_trg.sql
 
 

@@ -26,22 +26,23 @@ PROMPT Errors are thrown if an expected object does not exist.
 PROMPT ======================================================================
 
 PROMPT ======================================================================
-PROMPT drop demo tables 
+PROMPT drop demo tables
 PROMPT ======================================================================
 DROP TABLE emp PURGE;
 DROP TABLE dept PURGE;
 
 PROMPT ======================================================================
-PROMPT drop monitoring views 
+PROMPT drop monitoring views
 PROMPT ======================================================================
-PROMPT 
+PROMPT
 DROP VIEW monitor_requests_v;
 DROP VIEW monitor_responses_v;
+DROP VIEW monitor_req_res_v;
 
 PROMPT ======================================================================
 PROMPT stop queues
 PROMPT ======================================================================
-PROMPT 
+PROMPT
 BEGIN
    dbms_aqadm.stop_queue(queue_name => 'REQUESTS_AQ');
 END;
@@ -53,9 +54,39 @@ END;
 /
 
 PROMPT ======================================================================
+PROMPT unregister PL/SQL callback procedures
+PROMPT ======================================================================
+PROMPT
+BEGIN
+   FOR r IN (
+      SELECT subscription_name, location_name
+        FROM user_subscr_registrations
+   ) LOOP
+       dbms_aq.unregister(
+          reg_list => sys.aq$_reg_info_list(
+                         sys.aq$_reg_info(
+                            name      => r.subscription_name,
+                            namespace => DBMS_AQ.NAMESPACE_AQ,
+                            callback  => r.location_name,
+                            context   => NULL
+                         )
+                      ),
+          reg_count => 1
+       );
+   END LOOP;
+END;
+/
+
+PROMPT ======================================================================
+PROMPT drop callback procedure
+PROMPT ======================================================================
+PROMPT
+DROP PROCEDURE raw_enq_callback;
+
+PROMPT ======================================================================
 PROMPT drop queues
 PROMPT ======================================================================
-PROMPT 
+PROMPT
 BEGIN
    dbms_aqadm.drop_queue (queue_name => 'REQUESTS_AQ');
 END;
@@ -69,7 +100,7 @@ END;
 PROMPT ======================================================================
 PROMPT drop queue tables
 PROMPT ======================================================================
-PROMPT 
+PROMPT
 BEGIN
    dbms_aqadm.drop_queue_table (queue_table => 'REQUESTS_QT');
 END;
