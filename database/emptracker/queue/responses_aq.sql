@@ -19,3 +19,12 @@ BEGIN
    );
 END;
 /
+
+-- subscribe to all response messages (used for debug purposes only)
+BEGIN
+   dbms_aqadm.add_subscriber(
+      queue_name => 'responses_aq',
+      subscriber => sys.aq$_agent('ALL_RESPONSES', 'REQUESTS_AQ', 0)
+   );
+END;
+/
