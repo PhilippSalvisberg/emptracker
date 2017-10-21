@@ -1,6 +1,6 @@
 CREATE OR REPLACE TRIGGER emp_au_trg
    AFTER UPDATE OF sal ON emp
-   FOR EACH ROW 
+   FOR EACH ROW
 DECLARE
    PROCEDURE enqueue IS
       l_enqueue_options sys.dbms_aq.enqueue_options_t;
@@ -8,17 +8,17 @@ DECLARE
       l_jms_message     sys.aq$_jms_text_message := sys.aq$_jms_text_message.construct;
       l_msgid           RAW(16);
       e_no_recipients   EXCEPTION;
-      pragma exception_init(e_no_recipients, -24033);
+      PRAGMA exception_init(e_no_recipients, -24033);
    BEGIN
       l_jms_message.clear_properties();
       l_message_props.correlation := sys_guid;
       l_message_props.priority := 3;
-      l_message_props.expiration := 30;
-      l_jms_message.set_replyto(sys.aq$_agent('PLSQL', 'RESPONSES_AQ', 0));
+      l_message_props.expiration := 30; -- 30 seconds
+      l_jms_message.set_replyto(sys.aq$_agent('ALL_RESPONSES', 'RESPONSES_AQ', 0));
       l_jms_message.set_string_property('ename', :old.ename);
       l_jms_message.set_double_property('old_sal', coalesce(:old.sal, 0));
       l_jms_message.set_double_property('new_sal', coalesce(:new.sal, 0));
-      dbms_aq.enqueue(
+      sys.dbms_aq.enqueue(
          queue_name         => 'requests_aq',
          enqueue_options    => l_enqueue_options,
          message_properties => l_message_props,
