@@ -1,0 +1,50 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+				http://www.springframework.org/schema/beans 
+				http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
+				http://www.springframework.org/schema/context 
+				http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.salvis.emptracker" />
+
+	<!-- ========================================================================== -->
+	<!-- override default configuration in AppConfig.java -->
+	<!-- ========================================================================== -->
+
+	<bean id="aqUrl" class="java.lang.String">
+		<constructor-arg value="jdbc:oracle:thin:@localhost:1521:odb" />
+	</bean>
+
+	<bean id="aqUserName" class="java.lang.String">
+		<constructor-arg value="emptracker" />
+	</bean>
+
+	<bean id="aqPassword" class="java.lang.String">
+		<constructor-arg value="emptracker" />
+	</bean>
+
+	<!-- set subscriptionDurable=true when enabling concurrency to avoid multiple subscriptions -->
+	<bean id="concurrency" class="java.lang.String">
+		<constructor-arg value="1-1" />
+	</bean>
+
+	<bean id="maxMessagesPerTask" class="java.lang.Integer">
+		<constructor-arg value="100" />
+	</bean>
+
+	<bean id="subscriptionDurable" class="java.lang.Boolean">
+		<constructor-arg value="true" />
+	</bean>
+	
+	<bean id="salaryIncreaseTemplate" class="java.lang.String">
+		<constructor-arg value="${ename} got a pay raise of $${more}. Making $${new_sal} a month now. Congrats. #OnCommitTrigger at #DOAG2017" />
+	</bean>
+
+	<bean id="salaryDecreaseTemplate" class="java.lang.String">
+		<constructor-arg value="${ename} got a pay reduction of $${less}. Making $${new_sal} a month now. #OnCommitTrigger at #DOAG2017" />
+	</bean>
+
+</beans>

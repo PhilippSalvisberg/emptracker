@@ -1,5 +1,6 @@
 package com.salvis.emptracker;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,10 +13,10 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterEmpTracker {
-	static final String PROPERTY_FILE = "/etc/emptracker.properties";
-	
+	static final String PROPERTY_FILE = System.getProperty("user.home") + File.separator + "emptracker.properties";
+
 	private Twitter twitter;
-	
+
 	public TwitterEmpTracker() {
 		Properties p = new Properties();
 		try {
@@ -36,7 +37,7 @@ public class TwitterEmpTracker {
 			throw new RuntimeException("Error reading " + PROPERTY_FILE + ".");
 		}
 	}
-	
+
 	public Status updateStatus(String text) {
 		try {
 			return twitter.updateStatus(text);
