@@ -1,5 +1,6 @@
 CREATE OR REPLACE VIEW monitor_req_res_v AS
 SELECT req.corr_id,
+       to_number(req.enq_txn_id) AS enq_tid,
        req.consumer_name AS request_consumer,
        res.consumer_name AS response_consumer,
        req.user_data.get_string_property('ename') AS ename,
