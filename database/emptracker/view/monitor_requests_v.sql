@@ -1,7 +1,7 @@
 CREATE OR REPLACE VIEW monitor_requests_v AS
 SELECT q.msgid AS msg_id,
        q.corrid AS corr_id,
-       q.enq_tid,
+       to_number(q.enq_tid) AS enq_tid,
        q.step_no,
        decode(q.state,
               0,
