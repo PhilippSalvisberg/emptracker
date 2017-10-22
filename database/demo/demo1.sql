@@ -22,5 +22,10 @@ UPDATE emp SET sal = sal - 40 WHERE ename = 'SCOTT';
 COMMIT;
 
 -- 1 Tweet
-UPDATE emp SET sal = sal + 100 WHERE ename = 'SCOTT';
-COMMIT;
+BEGIN
+   FOR i IN 1..200 LOOP
+      UPDATE emp SET sal = sal + 0.5 WHERE ename = 'SCOTT';
+   END LOOP;
+   COMMIT;
+END;
+/
