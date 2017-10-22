@@ -25,6 +25,7 @@ CREATE OR REPLACE PROCEDURE raw_enq_callback(
        l_jms_message := sys.aq$_jms_text_message.construct;
        l_jms_message.set_string_property('msg_type', in_msg_type);
        l_message_props.expiration := 1;
+       l_message_props.correlation := NULL;
        l_jms_message.set_text(in_text);
        dbms_aq.enqueue(
           queue_name         => 'responses_aq',
