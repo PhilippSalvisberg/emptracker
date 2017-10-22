@@ -94,7 +94,7 @@ public class AppConfig {
 		cont.setConnectionFactory(connectionFactory());
 		cont.setDestinationName(requestQueueName);
 		cont.setPubSubDomain(true);
-		cont.setSubscriptionName(appName + "_salChange");
+		cont.setSubscriptionName(appName);
 		cont.setSubscriptionDurable(subscriptionDurable);
 		cont.setMessageSelector("msg_type = 'AGGR'");
 		cont.setSessionAcknowledgeMode(Session.SESSION_TRANSACTED);
