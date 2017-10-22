@@ -1,5 +1,7 @@
 package com.salvis.emptracker;
 
+import java.sql.SQLException;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jms.JMSException;
@@ -20,18 +22,18 @@ import oracle.jms.AQjmsTopicPublisher;
 @Component
 public class TextMessageListener implements SessionAwareMessageListener<TextMessage> {
 	private final Logger logger = Logger.getLogger(TextMessageListener.class.getName());
-	
+
 	@Autowired
 	private TwitterEmpTracker twitter;
 
 	@Autowired(required = false)
 	@Qualifier("salaryIncreaseTemplate")
 	private String salaryIncreaseTemplate = "OMG ${ename} got a pay raise of $${more}. Making $${new_sal} a month now. Congrats. #OnCommitTrigger at #DOAG2017";
-	
+
 	@Autowired(required = false)
 	@Qualifier("salaryDecreaseTemplate")
-	private String salaryDecreaseTemplate = "Oh no, ${ename} got a pay reduction of $${less}. Making $${new_sal} a month now. #OnCommitTrigger at #DOAG2017";	
-	
+	private String salaryDecreaseTemplate = "Oh no, ${ename} got a pay reduction of $${less}. Making $${new_sal} a month now. #OnCommitTrigger at #DOAG2017";
+
 	private String getText(String ename, Double oldSal, Double newSal) {
 		String template;
 		if (newSal > oldSal) {
@@ -42,40 +44,22 @@ public class TextMessageListener implements SessionAwareMessageListener<TextMess
 			template = salaryDecreaseTemplate.replace("${less}", String.format("%.2f", less));
 		}
 		return template.replace("${ename}", ename.substring(0, 1) + ename.substring(1).toLowerCase())
-				.replace("${new_sal}", String.format("%.2f", newSal)).replace("${old_sal}", String.format("%.2f", oldSal));
-	}
-	
-	@PostConstruct
-	public void initialize() {
-		logger.info("TextMessageListener initialized.");
+				.replace("${new_sal}", String.format("%.2f", newSal))
+				.replace("${old_sal}", String.format("%.2f", oldSal));
 	}
 
-	@PreDestroy
-	public void cleanup() {
-		logger.info("TextMessageListener cleaned up.");
-	}
-
-	public void onMessage(final TextMessage request, final Session session) {
-
-		String messageId = null;
-		try {
-			messageId = request.getJMSMessageID();
-			logger.debug("processing message " + messageId + "...");
-			// prepare "empty" response
-			TextMessage response = null;
-			AQjmsAgent replyTo = (AQjmsAgent) request.getJMSReplyTo();
+	private void sendResponse(final TextMessage request, final Session session, String text) throws JMSException, SQLException {
+		// prepare "empty" response
+		TextMessage response = null;
+		AQjmsAgent replyTo = (AQjmsAgent) request.getJMSReplyTo();
+		if (replyTo != null) {
+			String correlationId = request.getJMSCorrelationID();
 			response = session.createTextMessage();
-			response.setJMSCorrelationID(request.getJMSCorrelationID());
-			// get text to post
-			String text = getText(request.getStringProperty("ename"), request.getDoubleProperty("old_sal"), request.getDoubleProperty("new_sal"));
-			logger.info("sending " + text);
-			twitter.updateStatus(text);
+			response.setJMSCorrelationID(correlationId);
 			response.setText(text);
-			// create a publisher using the current database session
-			// (connection)
+			// create a publisher using the current database session (connection)
 			Topic topic = session.createTopic(replyTo.getAddress());
-			AQjmsTopicPublisher publisher = (AQjmsTopicPublisher) ((TopicSession) session)
-					.createPublisher(topic);
+			AQjmsTopicPublisher publisher = (AQjmsTopicPublisher) ((TopicSession) session).createPublisher(topic);
 			AQjmsAgent[] recipients = { replyTo };
 			// inherit message expiration from request
 			long timeToLive;
@@ -88,16 +72,40 @@ public class TextMessageListener implements SessionAwareMessageListener<TextMess
 			publisher.setTimeToLive(timeToLive);
 			// ready to publish response
 			publisher.publish(response, recipients);
-			logger.debug("published response for message " + messageId + " (expires in "
-					+ Long.toString(timeToLive) + ").");
+			logger.info("response for correlationId " + correlationId + " sent.");
+		}
+	}
+
+	@PostConstruct
+	public void initialize() {
+		logger.info("TextMessageListener initialized.");
+	}
+
+	@PreDestroy
+	public void cleanup() {
+		logger.info("TextMessageListener cleaned up.");
+	}
+
+	public void onMessage(final TextMessage request, final Session session) {
+		String correlationId = null;
+		try {
+			correlationId = request.getJMSCorrelationID();
+			logger.debug("processing message with correlationId " + correlationId + "...");
+			String ename = request.getStringProperty("ename");
+			Double oldSal = request.getDoubleProperty("old_sal");
+			Double newSal = request.getDoubleProperty("new_sal");
+			String text = getText(ename, oldSal, newSal);
+			logger.info(text);
+			twitter.updateStatus(text);
+			sendResponse(request, session, text);
 			session.commit();
 		} catch (Exception e) {
 			try {
 				session.rollback(); // increment retry count / expire message
 			} catch (JMSException e1) {
 				logger.error("Cound not rollback session (to increment retry count). Error was : " + e1.getMessage());
-			} // expire message
-			String errorText = "message " + messageId + " processed with error: " + e.getMessage();
+			}
+			String errorText = "message with correlationId " + correlationId + " processed with error: " + e.getMessage();
 			logger.error(errorText);
 			throw new RuntimeException(errorText);
 		}
