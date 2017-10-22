@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -14,7 +16,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterEmpTracker {
 	static final String PROPERTY_FILE = System.getProperty("user.home") + File.separator + "emptracker.properties";
-
+	private final Logger logger = Logger.getLogger(TextMessageListener.class.getName());
 	private Twitter twitter;
 
 	public TwitterEmpTracker() {
@@ -36,11 +38,14 @@ public class TwitterEmpTracker {
 		} catch (IOException e) {
 			throw new RuntimeException("Error reading " + PROPERTY_FILE + ".");
 		}
+		logger.info("TwitterEmpTracker initialized.");
 	}
 
 	public Status updateStatus(String text) {
 		try {
-			return twitter.updateStatus(text);
+			Status status = twitter.updateStatus(text);
+			logger.info(status.getUser().getScreenName() + " status updated.");
+			return status;
 		} catch (TwitterException e) {
 			throw new RuntimeException(e.getMessage());
 		}
