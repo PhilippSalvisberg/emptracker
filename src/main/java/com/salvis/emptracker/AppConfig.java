@@ -75,7 +75,7 @@ public class AppConfig {
 		logger.info("connectionFactory() called.");
 		TopicConnectionFactory connectionFactory;
 		try {
-			connectionFactory = AQjmsFactory.getTopicConnectionFactory(aqDataSource());
+			connectionFactory = AQjmsFactory.getTopicConnectionFactory(messageDataSource());
 		} catch (JMSException e) {
 			throw new RuntimeException("cannot get connection factory.");
 		}
@@ -89,8 +89,8 @@ public class AppConfig {
 	}
 
 	@Bean
-	public DefaultMessageListenerContainer salChangeJmsContainer() {
-		logger.info("salChangeJmsContainer() called.");
+	public DefaultMessageListenerContainer messageListenerContainer() {
+		logger.info("messageListenerContainer() called.");
 		DefaultMessageListenerContainer cont = new DefaultMessageListenerContainer();
 		cont.setMessageListener(messageListener());
 		cont.setConnectionFactory(connectionFactory());
@@ -98,7 +98,7 @@ public class AppConfig {
 		cont.setPubSubDomain(true);
 		cont.setSubscriptionName(appName);
 		cont.setSubscriptionDurable(true);
-		cont.setMessageSelector("msg_type = 'AGGR'");
+		cont.setMessageSelector("msg_type IN ('AGGR', 'TWEET')");
 		cont.setSessionAcknowledgeMode(Session.SESSION_TRANSACTED);
 		cont.setSessionTransacted(true);
 		cont.setConcurrency("1-4");
@@ -108,8 +108,8 @@ public class AppConfig {
 	}
 	
 	@Bean
-	public DataSource aqDataSource() {
-		logger.info("aqDataSource() called.");
+	public DataSource messageDataSource() {
+		logger.info("messageDataSource() called.");
 		PoolDataSource pds = PoolDataSourceFactory.getPoolDataSource();
 		try {
 			pds.setConnectionFactoryClassName("oracle.jdbc.OracleDriver");
@@ -136,6 +136,6 @@ public class AppConfig {
 	
     @Bean
     public PlatformTransactionManager txManager() {
-        return new DataSourceTransactionManager(aqDataSource());
+        return new DataSourceTransactionManager(messageDataSource());
     }	
 }
