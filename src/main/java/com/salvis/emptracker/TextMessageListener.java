@@ -78,12 +78,12 @@ public class TextMessageListener implements SessionAwareMessageListener<TextMess
 
 	@PostConstruct
 	public void initialize() {
-		logger.info("TextMessageListener initialized.");
+		logger.info("messageListener initialized.");
 	}
 
 	@PreDestroy
 	public void cleanup() {
-		logger.info("TextMessageListener cleaned up.");
+		logger.info("messageListener cleaned up.");
 	}
 
 	public void onMessage(final TextMessage request, final Session session) {
