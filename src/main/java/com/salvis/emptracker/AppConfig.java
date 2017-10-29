@@ -9,10 +9,10 @@ import javax.jms.TopicConnectionFactory;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -21,51 +21,53 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import oracle.jms.AQjmsFactory;
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 @EnableTransactionManagement
 @Configuration
+@PropertySource(value = "file:${user.home}/emptracker.properties", ignoreResourceNotFound = true)
 public class AppConfig {
 	private final Logger logger = Logger.getLogger(AppConfig.class);
 
-	@Autowired(required = false)
-	@Qualifier("aqUrl")
-	private String aqUrl = "jdbc:oracle:thin:@localhost:1521:odb";
+	@Value("${db.url}")
+	private String url;
 
-	@Autowired(required = false)
-	@Qualifier("aqUserName")
-	private String aqUserName = "emptracker";
+	@Value("${db.user}")
+	private String user;
 
-	@Autowired(required = false)
-	@Qualifier("aqPassword")
-	private String aqPassword = "emptracker";
+	@Value("${db.password}")
+	private String password;
 
-	@Autowired(required = false)
-	@Qualifier("requestQueueName")
-	private String requestQueueName = "requests_aq";
+	@Value("${db.queue}")
+	private String queueName;
 	
-	@Autowired(required = false)
-	@Qualifier("appName")
-	private String appName = "EmpTracker";
+	@Value("${app.name}")
+	private String appName;
+	
+	@Value("${twitter4j.oauth.consumerKey}")
+	private String consumerKey;
 
-	@Autowired(required = false)
-	@Qualifier("concurrency")
-	private String concurrency = "1-4";
-	
-	@Autowired(required = false)
-	@Qualifier("receiveTimeout")
-	private Integer receiveTimeout = 1;
-	
-	@Autowired(required = false)
-	@Qualifier("maxMessagesPerTask")
-	private Integer maxMessagesPerTask = 1;
-	
-	@Autowired(required = false)
-	@Qualifier("subscriptionDurable")
-	private Boolean subscriptionDurable = true;
+	@Value("${twitter4j.oauth.consumerSecret}")
+	private String consumerSecret;
+
+	@Value("${twitter4j.oauth.accessToken}")
+	private String accessToken;
+
+	@Value("${twitter4j.oauth.accessTokenSecret}")
+	private String accessTokenSecret;
 	
 	@Bean
-	public TwitterEmpTracker twitter() {
-		return new TwitterEmpTracker();
+	public Twitter twitter() {
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setOAuthConsumerKey(consumerKey)
+			.setOAuthConsumerSecret(consumerSecret)
+			.setOAuthAccessToken(accessToken)
+			.setOAuthAccessTokenSecret(accessTokenSecret);
+		TwitterFactory tf = new TwitterFactory(cb.build());
+		Twitter twitter = tf.getInstance();
+		return twitter;
 	}
 	
 	@Bean
@@ -92,16 +94,16 @@ public class AppConfig {
 		DefaultMessageListenerContainer cont = new DefaultMessageListenerContainer();
 		cont.setMessageListener(messageListener());
 		cont.setConnectionFactory(connectionFactory());
-		cont.setDestinationName(requestQueueName);
+		cont.setDestinationName(queueName);
 		cont.setPubSubDomain(true);
 		cont.setSubscriptionName(appName);
-		cont.setSubscriptionDurable(subscriptionDurable);
+		cont.setSubscriptionDurable(true);
 		cont.setMessageSelector("msg_type = 'AGGR'");
 		cont.setSessionAcknowledgeMode(Session.SESSION_TRANSACTED);
 		cont.setSessionTransacted(true);
-		cont.setConcurrency(concurrency);
-		cont.setMaxMessagesPerTask(maxMessagesPerTask);
-		cont.setReceiveTimeout(receiveTimeout);
+		cont.setConcurrency("1-4");
+		cont.setMaxMessagesPerTask(100);
+		cont.setReceiveTimeout(10);
 		return cont;
 	}
 	
@@ -111,15 +113,14 @@ public class AppConfig {
 		PoolDataSource pds = PoolDataSourceFactory.getPoolDataSource();
 		try {
 			pds.setConnectionFactoryClassName("oracle.jdbc.OracleDriver");
-			String url = aqUrl;
 			// see https://docs.oracle.com/database/122/JJUAR/oracle/ucp/jdbc/PoolDataSource.html
 			pds.setURL(url);
-			pds.setUser(aqUserName);
-			pds.setPassword(aqPassword);
+			pds.setUser(user);
+			pds.setPassword(password);
 			// close inactive connections within the pool after 60 seconds
 			pds.setInactiveConnectionTimeout(60); 
 			// return inactive connections to the pool after ... seconds, e.g. to recover from network failure
-			// if connection is idle for the configured number of seconds, but but JMS based operation is
+			// if connection is idle for the configured number of seconds, but JMS based operation is
 			// not yet completed, then the session is returned to the pool, even if a subsequent response and
 			// commit would have been possible. Hence this timeout is set to 0.
 			pds.setAbandonedConnectionTimeout(0); 
@@ -136,6 +137,5 @@ public class AppConfig {
     @Bean
     public PlatformTransactionManager txManager() {
         return new DataSourceTransactionManager(aqDataSource());
-    }
-	
+    }	
 }
