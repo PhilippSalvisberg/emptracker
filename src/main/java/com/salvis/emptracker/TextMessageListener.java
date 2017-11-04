@@ -48,7 +48,7 @@ public class TextMessageListener implements SessionAwareMessageListener<TextMess
 				.replace("@{old_sal}", String.format("%.2f", oldSal));
 	}
 
-	private void sendResponse(final TextMessage request, final Session session, String text) throws JMSException, SQLException {
+	private void sendResponse(final TextMessage request, final Session session, String text, String msgType) throws JMSException, SQLException {
 		// prepare "empty" response
 		TextMessage response = null;
 		AQjmsAgent replyTo = (AQjmsAgent) request.getJMSReplyTo();
@@ -56,6 +56,7 @@ public class TextMessageListener implements SessionAwareMessageListener<TextMess
 			String correlationId = request.getJMSCorrelationID();
 			response = session.createTextMessage();
 			response.setJMSCorrelationID(correlationId);
+			response.setStringProperty("msg_type", msgType);
 			response.setText(text);
 			// create a publisher using the current database session (connection)
 			Topic topic = session.createTopic(replyTo.getAddress());
@@ -102,7 +103,7 @@ public class TextMessageListener implements SessionAwareMessageListener<TextMess
 			Status status = twitter.updateStatus(text);
 			String screenName = status.getUser().getScreenName();
 			logger.debug("tweet by " + screenName);
-			sendResponse(request, session, screenName + ": " + text);
+			sendResponse(request, session, screenName + ": " + text, "INFO");
 			session.commit();
 		} catch (Exception e) {
 			try {
@@ -113,7 +114,7 @@ public class TextMessageListener implements SessionAwareMessageListener<TextMess
 			String errorText = "message with correlationId " + correlationId + " processed with error: " + e.toString();
 			logger.error(errorText);
 			try {
-				sendResponse(request, session, errorText);
+				sendResponse(request, session, errorText, "ERROR");
 				session.commit();
 			} catch (Exception e1) {
 				logger.error("Could not send response for correlationId " + correlationId + ". Got error_ " + e1.toString());
