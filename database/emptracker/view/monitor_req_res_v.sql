@@ -22,6 +22,7 @@ SELECT req.corr_id,
        req.user_data.get_string_property('ename') AS ename,
        req.user_data.get_double_property('old_sal') AS old_sal,
        req.user_data.get_double_property('new_sal') AS new_sal,
+       req.user_data.text_vc AS request_text,
        res.user_data.text_vc AS response_text,
        req.enq_timestamp AS request_timestamp,
        res.enq_timestamp - req.enq_timestamp AS response_time
