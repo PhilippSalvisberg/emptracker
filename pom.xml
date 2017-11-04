@@ -4,7 +4,6 @@
 	<groupId>com.salvis</groupId>
 	<artifactId>emptracker</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>EmpTracker</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdk.version>1.8</jdk.version>
@@ -174,4 +173,29 @@
 			<systemPath>${project.basedir}/lib/ucp.jar</systemPath>
 		</dependency>
 	</dependencies>
+
+	<!-- More Project Information -->
+	<name>EmpTracker</name>
+	<description>Demo application to track changes in EMP table of an OracleDatabase and tweet about salary changes.</description>
+	<url>https://github.com/PhilippSalvisberg/emptracker</url>
+	<inceptionYear>2017</inceptionYear>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<email>philipp.salvisberg@trivadis.com</email>
+			<name>Philipp Salvisberg</name>
+			<url>https://github.com/PhilippSalvisberg/</url>
+			<id>PhilippSalvisberg</id>
+			<roles>
+				<role>lead</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
 </project>	
