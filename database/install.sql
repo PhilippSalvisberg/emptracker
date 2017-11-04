@@ -49,6 +49,12 @@ PROMPT
 @./emptracker/procedure/raw_enq_callback.sql
 
 PROMPT ======================================================================
+PROMPT create PL/SQL tweet function
+PROMPT ======================================================================
+PROMPT
+@./emptracker/function/tweet.sql
+
+PROMPT ======================================================================
 PROMPT create monitoring views
 PROMPT ======================================================================
 PROMPT
@@ -68,7 +74,5 @@ PROMPT create trigger to enqueue sal changes
 PROMPT ======================================================================
 PROMPT
 @./emptracker/trigger/emp_au_trg.sql
-
-
 
 SPOOL OFF
