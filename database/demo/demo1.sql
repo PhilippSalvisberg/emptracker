@@ -14,15 +14,12 @@ SELECT * FROM MONITOR_REQUESTS_V;
 SELECT * FROM MONITOR_RESPONSES_V;
 SELECT * FROM MONITOR_REQ_RES_V;
 
--- 1 Tweet
-UPDATE emp SET sal = sal - 10 WHERE ename = 'SCOTT';
-UPDATE emp SET sal = sal - 20 WHERE ename = 'SCOTT';
-UPDATE emp SET sal = sal - 30 WHERE ename = 'SCOTT';
-UPDATE emp SET sal = sal - 40 WHERE ename = 'SCOTT';
-COMMIT;
-
--- 1 Tweet
+-- 0 Tweet
 BEGIN
+   UPDATE emp SET sal = sal - 10 WHERE ename = 'SCOTT';
+   UPDATE emp SET sal = sal - 20 WHERE ename = 'SCOTT';
+   UPDATE emp SET sal = sal - 30 WHERE ename = 'SCOTT';
+   UPDATE emp SET sal = sal - 40 WHERE ename = 'SCOTT';
    FOR i IN 1..200 LOOP
       UPDATE emp SET sal = sal + 0.5 WHERE ename = 'SCOTT';
    END LOOP;
