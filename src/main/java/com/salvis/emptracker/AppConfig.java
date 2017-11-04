@@ -102,7 +102,7 @@ public class AppConfig {
 		cont.setSessionAcknowledgeMode(Session.SESSION_TRANSACTED);
 		cont.setSessionTransacted(true);
 		cont.setConcurrency("1-4");
-		cont.setMaxMessagesPerTask(100);
+		cont.setMaxMessagesPerTask(20);
 		cont.setReceiveTimeout(10);
 		return cont;
 	}
