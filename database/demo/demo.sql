@@ -24,7 +24,7 @@ SELECT tweet('Hello World!') FROM DUAL;
 -- monitor queues
 SELECT * FROM monitor_requests_v order by enq_timestamp;
 SELECT * FROM monitor_responses_v order by enq_timestamp;
-SELECT * FROM monitor_req_res_v order by request_timestamp;
+SELECT * FROM monitor_req_res_v order by request_timestamp, response_time;
 
 -- 5 tweets
 UPDATE emp SET sal = sal * 2;
