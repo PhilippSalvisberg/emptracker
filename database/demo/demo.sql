@@ -18,6 +18,9 @@
 @@../uninstall.sql
 @@../install.sql
 
+-- build and run EmptrackerApplication to listen on JMS messages and send tweets
+mvn spring-boot:run
+
 -- tweet
 SELECT tweet('Hello World!') FROM DUAL;
 
@@ -30,7 +33,7 @@ SELECT * FROM monitor_req_res_v order by request_timestamp, response_time;
 UPDATE emp SET sal = sal * 2;
 ROLLBACK;
 UPDATE emp SET sal = sal + 100 WHERE JOB = 'SALESMAN';
-UPDATE emp SET sal = sal + 200 WHERE ename IN ('MARTIN' ,'SCOTT');
+UPDATE emp SET sal = sal + 200 WHERE ename IN ('MARTIN', 'SCOTT');
 COMMIT;
 
 -- no tweet
