@@ -41,7 +41,7 @@ BEGIN
    dbms_aqadm.add_subscriber(
       queue_name => 'requests_aq',
       subscriber => sys.aq$_agent('RAW_ENQ', 'REQUESTS_AQ', 0),
-      rule       => q'[coalesce(tab.user_data.get_string_property('msg_type'), 'RAW') = 'RAW']'
+      rule       => q'[tab.user_data.get_string_property('msg_type') = 'RAW']'
    );
 END;
 /

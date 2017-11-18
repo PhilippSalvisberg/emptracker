@@ -31,6 +31,7 @@ DECLARE
       l_message_props.priority := 3;
       l_message_props.expiration := 30; -- 30 seconds
       l_jms_message.set_replyto(sys.aq$_agent('ALL_RESPONSES', 'RESPONSES_AQ', 0));
+      l_jms_message.set_string_property('msg_type', 'RAW');
       l_jms_message.set_string_property('ename', :old.ename);
       l_jms_message.set_double_property('old_sal', :old.sal);
       l_jms_message.set_double_property('new_sal', :new.sal);
