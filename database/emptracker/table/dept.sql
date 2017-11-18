@@ -16,8 +16,8 @@
 
 CREATE TABLE dept (
    deptno   NUMBER(2)     CONSTRAINT pk_dept PRIMARY KEY,
-   dname    VARCHAR2(14),
-   loc      VARCHAR2(13)
+   dname    VARCHAR2(14)  NOT NULL,
+   loc      VARCHAR2(13)  NOT NULL
 );
 
 INSERT INTO dept VALUES (10, 'ACCOUNTING', 'NEW YORK');

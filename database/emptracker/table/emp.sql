@@ -16,11 +16,11 @@
 
 CREATE TABLE emp (
    empno    NUMBER(4)     CONSTRAINT pk_emp PRIMARY KEY,
-   ename    VARCHAR2(10),
-   job      VARCHAR2(9),
+   ename    VARCHAR2(10)  NOT NULL,
+   job      VARCHAR2(9)   NOT NULL,
    mgr      NUMBER(4),
-   hiredate DATE,
-   sal      NUMBER(7,2),
+   hiredate DATE          NOT NULL,
+   sal      NUMBER(7,2)   NOT NULL,
    comm     NUMBER(7,2),
    deptno   NUMBER(2)     CONSTRAINT fk_deptno REFERENCES dept
 );
