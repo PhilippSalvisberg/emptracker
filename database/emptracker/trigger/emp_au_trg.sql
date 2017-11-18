@@ -32,8 +32,8 @@ DECLARE
       l_message_props.expiration := 30; -- 30 seconds
       l_jms_message.set_replyto(sys.aq$_agent('ALL_RESPONSES', 'RESPONSES_AQ', 0));
       l_jms_message.set_string_property('ename', :old.ename);
-      l_jms_message.set_double_property('old_sal', coalesce(:old.sal, 0));
-      l_jms_message.set_double_property('new_sal', coalesce(:new.sal, 0));
+      l_jms_message.set_double_property('old_sal', :old.sal);
+      l_jms_message.set_double_property('new_sal', :new.sal);
       sys.dbms_aq.enqueue(
          queue_name         => 'requests_aq',
          enqueue_options    => l_enqueue_options,
@@ -46,7 +46,7 @@ DECLARE
          NULL; -- OK, topic is not of interest
    END enqueue;
 BEGIN
-   IF coalesce(:old.sal, 0) != coalesce(:new.sal, 0) THEN
+   IF :old.sal != :new.sal THEN
       enqueue;
    END IF;
 END;

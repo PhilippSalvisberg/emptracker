@@ -96,7 +96,8 @@ CREATE OR REPLACE PROCEDURE raw_enq_callback(
       -- callback called for each message in a group
       -- one call will process all messages of a group
       -- group is limited to 1000 messages, this should be enough
-      -- very large groups will be processed indendently and may lead to additional notifications
+      -- very large groups will be processed independently and
+      -- may lead to additional notifications
       l_dequeue_options.consumer_name := descr.consumer_name;
       l_dequeue_options.navigation    := sys.dbms_aq.first_message_one_group;
       l_dequeue_options.wait          := sys.dbms_aq.no_wait;
@@ -110,8 +111,8 @@ CREATE OR REPLACE PROCEDURE raw_enq_callback(
       );
       log_it(
          'dequeued ' || l_msg_count || ' RAW messages triggered by msg_id ' ||
-            descr.msg_id || ' in transaction ' ||
-            ltrim(t_message_props(1).transaction_group)
+         descr.msg_id || ' in transaction ' ||
+         ltrim(t_message_props(1).transaction_group)
       );
    EXCEPTION
       WHEN e_no_msg THEN
@@ -148,7 +149,7 @@ CREATE OR REPLACE PROCEDURE raw_enq_callback(
             )
             SELECT DISTINCT id, ename, old_sal, new_sal
               FROM base
-             WHERE coalesce(old_sal, 0) != coalesce(new_sal, 0)
+             WHERE old_sal != new_sal
       ) LOOP
          enqueue_aggr(
             in_index => r.id,
