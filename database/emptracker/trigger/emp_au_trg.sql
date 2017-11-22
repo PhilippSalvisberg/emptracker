@@ -29,7 +29,7 @@ DECLARE
       l_jms_message.clear_properties();
       l_message_props.correlation := sys_guid;
       l_message_props.priority := 3;
-      l_message_props.expiration := 30; -- 30 seconds
+      l_message_props.expiration := 300; -- 5 minutes
       l_jms_message.set_replyto(sys.aq$_agent('ALL_RESPONSES', 'RESPONSES_AQ', 0));
       l_jms_message.set_string_property('msg_type', 'RAW');
       l_jms_message.set_string_property('ename', :old.ename);
