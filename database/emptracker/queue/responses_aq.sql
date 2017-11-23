@@ -40,7 +40,7 @@ END;
 BEGIN
    dbms_aqadm.add_subscriber(
       queue_name => 'responses_aq',
-      subscriber => sys.aq$_agent('ALL_RESPONSES', 'RESPONSES_AQ', 0)
+      subscriber => sys.aq$_agent('ALL_RESPONSES', NULL, 0)
    );
 END;
 /

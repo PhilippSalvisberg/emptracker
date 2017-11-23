@@ -40,7 +40,7 @@ END;
 BEGIN
    dbms_aqadm.add_subscriber(
       queue_name => 'requests_aq',
-      subscriber => sys.aq$_agent('RAW_ENQ', 'REQUESTS_AQ', 0),
+      subscriber => sys.aq$_agent('RAW_ENQ', NULL, 0),
       rule       => q'[tab.user_data.get_string_property('msg_type') = 'RAW']'
    );
 END;
