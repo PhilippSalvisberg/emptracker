@@ -3,7 +3,7 @@
 ## Introduction
 EmpTracker is a demo application to track changes in EMP table of an OracleDatabase and tweet about salary changes.
 
-![Twitter Screenshot](https://raw.githubusercontent.com/PhilippSalvisberg/emptracker/master/src/main/resources/twitter_emptracker_scott_miller.png)
+![Twitter Screenshot](https://raw.github.com/PhilippSalvisberg/emptracker/master/src/main/resources/twitter_emptracker_scott_miller.png)
 
 ## Prerequisites
 
