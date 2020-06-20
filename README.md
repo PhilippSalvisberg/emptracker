@@ -3,7 +3,7 @@
 ## Introduction
 EmpTracker is a demo application to track changes in EMP table of an OracleDatabase and tweet about salary changes.
 
-![Twitter Screenshot](https://raw.github.com/PhilippSalvisberg/emptracker/master/src/main/resources/twitter_emptracker_scott_miller.png)
+![Twitter Screenshot](https://raw.github.com/PhilippSalvisberg/emptracker/main/src/main/resources/twitter_emptracker_scott_miller.png)
 
 ## Prerequisites
 
@@ -22,13 +22,13 @@ EmpTracker is a demo application to track changes in EMP table of an OracleDatab
 		cd (...)
 
 3. Create an Oracle user for the emptracker database objects. The default username and password is ```emptracker```.
-   * optionally change username, password and tablespace in the installation script [database/emptracker/user/emptracker.sql](https://github.com/PhilippSalvisberg/emptracker/blob/master/database/emptracker/user/emptracker.sql)
+   * optionally change username, password and tablespace in the installation script [database/emptracker/user/emptracker.sql](https://github.com/PhilippSalvisberg/emptracker/blob/main/database/emptracker/user/emptracker.sql)
 
    * connect as sys to the target database
 
 			sqlplus / as sysdba
 
-   * execute the script [database/emptracker/user/emptracker.sql](https://github.com/PhilippSalvisberg/emptracker/blob/master/database/emptracker/user/emptracker.sql)
+   * execute the script [database/emptracker/user/emptracker.sql](https://github.com/PhilippSalvisberg/emptracker/blob/main/database/emptracker/user/emptracker.sql)
 
 			@database/emptracker/user/emptracker.sql
 			EXIT
@@ -39,12 +39,12 @@ EmpTracker is a demo application to track changes in EMP table of an OracleDatab
 
 			sqlplus emptracker/emptracker
 
-   * execute the script [database/install.sql](https://github.com/PhilippSalvisberg/emptracker/blob/master/database/install.sql)
+   * execute the script [database/install.sql](https://github.com/PhilippSalvisberg/emptracker/blob/main/database/install.sql)
 
 			@database/install.sql
 			EXIT
 
-5. Change [src/main/resources/application.properties](https://github.com/PhilippSalvisberg/emptracker/blob/master/src/main/resources/application.properties)
+5. Change [src/main/resources/application.properties](https://github.com/PhilippSalvisberg/emptracker/blob/main/src/main/resources/application.properties)
 
    * Database properties ```db.url```, ```db.user``` and ```db.password```
    * Twitter credentials ```twitter4j.oauth.consumerKey```, ```twitter4j.oauth. consumerSecret ```, ```twitter4j.oauth. accessToken ``` and ```twitter4j.oauth. accessTokenSecret ```
@@ -55,7 +55,7 @@ EmpTracker is a demo application to track changes in EMP table of an OracleDatab
 		
 ## Usage
 
-The [demo](https://github.com/PhilippSalvisberg/emptracker/blob/master/database/demo/demo.sql) SQL script shows how to post a tweet from the database.
+The [demo](https://github.com/PhilippSalvisberg/emptracker/blob/main/database/demo/demo.sql) SQL script shows how to post a tweet from the database.
 
 ## Issues
 
