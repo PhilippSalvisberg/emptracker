@@ -57,20 +57,6 @@ EmpTracker is a demo application to track changes in EMP table of an OracleDatab
 
 The [demo](https://github.com/PhilippSalvisberg/emptracker/blob/main/database/demo/demo.sql) SQL script shows how to post a tweet from the database.
 
-## Issues
-
-Please file your bug reports, enhancement requests, questions and other support requests within [Github's issue tracker](https://help.github.com/articles/about-issues/):
-
-* [Existing issues](https://github.com/PhilippSalvisberg/emptracker/issues)
-* [submit new issue](https://github.com/PhilippSalvisberg/emptracker/issues/new)
-
-## How to Contribute
-
-1. Describe your idea by [submitting an issue](https://github.com/PhilippSalvisberg/emptracker/issues/new)
-2. [Fork the plsql-utils respository](https://github.com/PhilippSalvisberg/emptracker/fork)
-3. [Create a branch](https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/), commit and publish your changes and enhancements
-4. [Create a pull request](https://help.github.com/articles/creating-a-pull-request/)
-
 ## License
 
 EmpTracker is licensed under the Apache License, Version 2.0. You may obtain a copy of the License at <http://www.apache.org/licenses/LICENSE-2.0>.
