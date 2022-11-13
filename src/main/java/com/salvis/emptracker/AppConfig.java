@@ -38,8 +38,6 @@ import oracle.jms.AQjmsFactory;
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
 import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.ConfigurationBuilder;
 
 @EnableTransactionManagement
 @Configuration
@@ -76,13 +74,10 @@ public class AppConfig {
 	
 	@Bean
 	public Twitter twitter() {
-		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setOAuthConsumerKey(consumerKey)
-			.setOAuthConsumerSecret(consumerSecret)
-			.setOAuthAccessToken(accessToken)
-			.setOAuthAccessTokenSecret(accessTokenSecret);
-		TwitterFactory tf = new TwitterFactory(cb.build());
-		Twitter twitter = tf.getInstance();
+		Twitter twitter = Twitter.newBuilder()
+				.oAuthConsumer(consumerKey, consumerSecret)
+				.oAuthAccessToken(accessToken, accessTokenSecret)
+				.build();
 		return twitter;
 	}
 	

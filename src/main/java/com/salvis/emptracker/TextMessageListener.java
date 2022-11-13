@@ -34,8 +34,8 @@ import org.springframework.stereotype.Component;
 
 import oracle.jms.AQjmsAgent;
 import oracle.jms.AQjmsTopicPublisher;
-import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.v1.Status;
 
 @Component
 public class TextMessageListener implements SessionAwareMessageListener<TextMessage> {
@@ -116,7 +116,7 @@ public class TextMessageListener implements SessionAwareMessageListener<TextMess
 				text = getText(ename, oldSal, newSal);
 			}
 			logger.info(text);
-			Status status = twitter.updateStatus(text);
+			Status status = twitter.v1().tweets().updateStatus(text);
 			String screenName = status.getUser().getScreenName();
 			logger.debug("tweet by " + screenName);
 			sendResponse(request, session, screenName + ": " + text, "INFO");
