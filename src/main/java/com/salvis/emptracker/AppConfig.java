@@ -23,7 +23,8 @@ import javax.jms.Session;
 import javax.jms.TopicConnectionFactory;
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,14 +38,12 @@ import oracle.jms.AQjmsFactory;
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
 import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.ConfigurationBuilder;
 
 @EnableTransactionManagement
 @Configuration
 @PropertySource(value = "file:${user.home}/emptracker.properties", ignoreResourceNotFound = true)
 public class AppConfig {
-	private final Logger logger = Logger.getLogger(AppConfig.class);
+	private final Logger logger = LoggerFactory.getLogger(AppConfig.class);
 
 	@Value("${db.url}")
 	private String url;
@@ -75,13 +74,10 @@ public class AppConfig {
 	
 	@Bean
 	public Twitter twitter() {
-		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setOAuthConsumerKey(consumerKey)
-			.setOAuthConsumerSecret(consumerSecret)
-			.setOAuthAccessToken(accessToken)
-			.setOAuthAccessTokenSecret(accessTokenSecret);
-		TwitterFactory tf = new TwitterFactory(cb.build());
-		Twitter twitter = tf.getInstance();
+		Twitter twitter = Twitter.newBuilder()
+				.oAuthConsumer(consumerKey, consumerSecret)
+				.oAuthAccessToken(accessToken, accessTokenSecret)
+				.build();
 		return twitter;
 	}
 	

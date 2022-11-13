@@ -15,22 +15,19 @@
  */
 package com.salvis.emptracker.tests;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.salvis.emptracker.AppConfig;
 
-import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.v1.Status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes=AppConfig.class)
 @Import(AppConfig.class)
 public class TweetTest {
 	
@@ -39,9 +36,9 @@ public class TweetTest {
 
 	@Test
 	public void postTweet() throws TwitterException {
-		String text = "SCOTT got a pay raise of $150. Making $3000 a month now. Congrats.";
-		Status status = twitter.updateStatus(text);
-		Assert.assertEquals(text, status.getText());
+		String text = "SCOTT got a pay raise of $250. Making $3100 a month now. Congrats.";
+		Status status = twitter.v1().tweets().updateStatus(text);
+		Assertions.assertEquals(text, status.getText());
 	}
 
 }
