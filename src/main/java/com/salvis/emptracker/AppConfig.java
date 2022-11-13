@@ -23,7 +23,8 @@ import javax.jms.Session;
 import javax.jms.TopicConnectionFactory;
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +45,7 @@ import twitter4j.conf.ConfigurationBuilder;
 @Configuration
 @PropertySource(value = "file:${user.home}/emptracker.properties", ignoreResourceNotFound = true)
 public class AppConfig {
-	private final Logger logger = Logger.getLogger(AppConfig.class);
+	private final Logger logger = LoggerFactory.getLogger(AppConfig.class);
 
 	@Value("${db.url}")
 	private String url;

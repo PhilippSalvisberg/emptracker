@@ -25,7 +25,8 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.jms.TopicSession;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.listener.SessionAwareMessageListener;
@@ -38,7 +39,7 @@ import twitter4j.Twitter;
 
 @Component
 public class TextMessageListener implements SessionAwareMessageListener<TextMessage> {
-	private final Logger logger = Logger.getLogger(TextMessageListener.class.getName());
+	private final Logger logger = LoggerFactory.getLogger(TextMessageListener.class.getName());
 
 	@Autowired
 	private Twitter twitter;
