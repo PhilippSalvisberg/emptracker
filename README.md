@@ -7,10 +7,10 @@ EmpTracker is a demo application to track changes in EMP table of an OracleDatab
 
 ## Prerequisites
 
-* Oracle Database 11.1 or higher
+* Oracle Database 19c or newer
 * Oracle client (SQL\*Plus, SQLcl or SQL Developer) to connect to the database
 * Twitter Account and [OAuth credentials](https://apps.twitter.com/)
-* Java SE Development Kit 8
+* Java SE Development Kit 8 or newer (works with JDK 17)
 * Apache Maven 3
 
 ## Installation
